@@ -30,7 +30,7 @@
   "eslintConfig": {
     "extends": "haaxor1689s-config"
   },
-  "prettier": "prettier-config-haaxor1689s-config"
+  "prettier": "prettier-config-haaxor1689s-config",
   "browserslist": {
     "production": [
       ">0.2%",
