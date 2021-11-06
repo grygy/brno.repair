@@ -4,12 +4,12 @@ Adam Grygar & Miroslav Bezak
 
 ### O cem to je?
 
-Jednalo by se o web na reportovani problemu v Brne. Napriklad vyvracena znacka, dira v silnici a podobne. 
+Jednalo by se o web na reportovani problemu v Brne. Napriklad vyvraceny strom, dira v silnici a podobne. 
 
 #### Funkcionalita
-- Pridavani techto problemu s prilozenou fotografii, nazvem, popisem, mistem (bud jako pin v mape, nebo adresa), datum a danou zavaznosti problemu pro naslednou filtraci. 
-- Dale Problem bude mit kategorii a status, zda je vyreseny.
-- Prochazeni problemu a jejich filtrovani podle zavaznosti. 
+- Pridavani techto problemu s prilozenou fotografii, nazvem, popisem, mistem (bud jako pin v mape, nebo adresa), datum a kategorii. 
+- Dale problem bude mit status, zda je vyreseny.
+- Prochazeni problemu a jejich filtrovani podle kategorii. 
 - Prihlaseni, registrace a sprava svych problemu. 
 
 #### Stranky
@@ -17,3 +17,6 @@ Jednalo by se o web na reportovani problemu v Brne. Napriklad vyvracena znacka, 
 - Prehled s vyhledavanim a filtrovanim vsech problemu.
 - Prihlasovaci/Registracni formular.
 - Sprava vlastnich problemu.
+
+#### Prototyp
+- https://www.figma.com/file/T3FNWoj3k87nf7rIc62oLo/brno.repair?node-id=0%3A1
