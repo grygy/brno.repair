@@ -8,7 +8,7 @@ import usePageTitle from '../hooks/usePageTitle';
 import { signIn, signUp } from '../utils/firebase';
 
 const Login = () => {
-	usePageTitle('Prihlaseni');
+	usePageTitle('Přihlášení');
 
 	const { push } = useHistory();
 
@@ -31,7 +31,8 @@ const Login = () => {
 					push('/');
 				} catch (err) {
 					setSubmitError(
-						(err as { message?: string })?.message ?? t('unknown_error')
+						(err as { message?: string })?.message ??
+							'Neznámá chyba. Nejspíš vyloženě naše chyba.'
 					);
 				}
 			}}
@@ -44,10 +45,10 @@ const Login = () => {
 			}}
 		>
 			<Typography variant="h4" component="h2" textAlign="center" mb={3}>
-				{t('login')}
+				Přihlášení
 			</Typography>
-			<TextField label={t('email')} {...usernameProps} type="email" />
-			<TextField label={t('password')} {...passwordProps} type="password" />
+			<TextField label="Email" {...usernameProps} type="email" />
+			<TextField label="Heslo" {...passwordProps} type="password" />
 			<Box
 				sx={{
 					display: 'flex',
@@ -71,10 +72,10 @@ const Login = () => {
 					variant="outlined"
 					onClick={() => setSignUp(true)}
 				>
-					{t('sign_up')}
+					Registrovat se
 				</Button>
 				<Button type="submit" variant="contained">
-					{t('sign_in')}
+					Přihlásit se
 				</Button>
 			</Box>
 		</Paper>
@@ -82,4 +83,3 @@ const Login = () => {
 };
 
 export default Login;
-

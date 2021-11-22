@@ -1,4 +1,4 @@
-/*import { createContext, FC, useContext, useEffect, useState } from 'react';
+import { createContext, FC, useContext, useEffect, useState } from 'react';
 import { User } from 'firebase/auth';
 
 import { onAuthChanged } from '../utils/firebase';
@@ -21,4 +21,3 @@ export const UserProvider: FC = ({ children }) => {
 const useLoggedInUser = () => useContext(UserContext);
 
 export default useLoggedInUser;
-*/

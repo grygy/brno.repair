@@ -2,12 +2,15 @@ import { FC } from 'react';
 import { Link } from 'react-router-dom';
 import { AppBar, Container, Toolbar, Button, Box } from '@mui/material';
 
+import useLoggedInUser from '../hooks/useLoggedInUser';
+import { signOut } from '../utils/firebase';
+
 const Layout: FC = ({ children }) => {
-	const user = undefined;
+	const user = useLoggedInUser();
 	return (
 		<>
 			<AppBar position="fixed">
-				<Container maxWidth="sm">
+				<Container maxWidth="lg">
 					<Toolbar disableGutters sx={{ gap: 2 }}>
 						<Button color="secondary" component={Link} to="/">
 							Domů
@@ -29,7 +32,9 @@ const Layout: FC = ({ children }) => {
 								Přihlásit se
 							</Button>
 						) : (
-							<Button color="secondary">Odhlásit se</Button>
+							<Button color="secondary" onClick={signOut}>
+								Odhlásit se
+							</Button>
 						)}
 					</Toolbar>
 				</Container>
