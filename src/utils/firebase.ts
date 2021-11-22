@@ -7,7 +7,19 @@ import {
 	onAuthStateChanged,
 	User
 } from 'firebase/auth';
-import { getFirestore } from 'firebase/firestore';
+import {
+	addDoc,
+	collection,
+	CollectionReference,
+	doc,
+	DocumentReference,
+	getDocs,
+	getFirestore,
+	limit,
+	orderBy,
+	query,
+	Timestamp
+} from 'firebase/firestore';
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -42,3 +54,38 @@ export const onAuthChanged = (callback: (u: User | null) => void) =>
 
 // Firestore
 const db = getFirestore();
+
+export type Category = 'Doprava' | 'Příroda' | 'Infrastruktura';
+
+export type Problem = {
+	title: string;
+	description: string;
+	author: string;
+	location: string;
+	created: Timestamp;
+	resolved: Timestamp | null;
+	category: Category;
+	// TODO image
+};
+
+export const getProblem = (id: string) =>
+	doc(db, 'problems', id) as DocumentReference<Problem>;
+
+const problemsCollection = collection(
+	db,
+	'problems'
+) as CollectionReference<Problem>;
+
+export const addProblem = async (problem: Problem) => {
+	await addDoc(problemsCollection, problem);
+};
+
+export const getLastProblems = async (limited: number) => {
+	const q = query(
+		problemsCollection,
+		orderBy('created', 'desc'),
+		limit(limited)
+	);
+	const querySnapshot = await getDocs(q);
+	return querySnapshot.docs.map(doc => doc.data());
+};

@@ -32,7 +32,7 @@ const Login = () => {
 				} catch (err) {
 					setSubmitError(
 						(err as { message?: string })?.message ??
-							'Neznámá chyba. Nejspíš vyloženě naše chyba.'
+							'Neznámá chyba. Vyloženě naše chyba.'
 					);
 				}
 			}}
