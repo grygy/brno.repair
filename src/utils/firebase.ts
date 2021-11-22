@@ -20,7 +20,7 @@ import {
 	query,
 	Timestamp
 } from 'firebase/firestore';
-import { getStorage, ref, uploadBytes } from 'firebase/storage';
+import { getDownloadURL, getStorage, ref, uploadBytes } from 'firebase/storage';
 
 // Constants
 const IMAGES = 'images/';
@@ -105,3 +105,6 @@ export const getLastProblems = async (limited: number) => {
 export const uploadImage = async (image: File) => {
 	await uploadBytes(ref(storage, `${IMAGES}${image.name}`), image);
 };
+
+export const getImage = async (id: string) =>
+	await getDownloadURL(ref(storage, `${IMAGES}${id}.jpg`));

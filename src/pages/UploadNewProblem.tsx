@@ -5,12 +5,13 @@ import { Box, Button } from '@mui/material';
 import { Timestamp } from '@firebase/firestore';
 import Compressor from 'compressorjs';
 
-import { addProblem, uploadImage } from '../utils/firebase';
+import { addProblem, getImage, uploadImage } from '../utils/firebase';
 import useLoggedInUser from '../hooks/useLoggedInUser';
 
 const UploadNewProblem = () => {
 	const user = useLoggedInUser();
 	const [image, setImage] = useState<File | null>(null);
+	const [idExample, setIdExample] = useState('');
 
 	const handleChange = (e: { target: { files: any } }) => {
 		const files = e.target.files;
@@ -43,10 +44,10 @@ const UploadNewProblem = () => {
 								maxWidth: 1500,
 								maxHeight: 1500,
 								convertSize: 700000,
+								mimeType: 'image/jpeg',
 								success: async result => {
-									const ext = result.type.split('/').pop();
-									const file = new File([result], `${id}.${ext}`, {
-										type: result.type
+									const file = new File([result], `${id}.jpg`, {
+										type: 'image/jpeg'
 									});
 									console.log('Uploading image');
 									await uploadImage(file);
@@ -59,6 +60,7 @@ const UploadNewProblem = () => {
 			>
 				Add simple problem
 			</Button>
+			<img src={idExample} alt="s" />
 		</Box>
 	);
 };
