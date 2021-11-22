@@ -11,7 +11,6 @@ import useLoggedInUser from '../hooks/useLoggedInUser';
 const UploadNewProblem = () => {
 	const user = useLoggedInUser();
 	const [image, setImage] = useState<File | null>(null);
-	const [idExample, setIdExample] = useState('');
 
 	const handleChange = (e: { target: { files: any } }) => {
 		const files = e.target.files;
@@ -60,7 +59,6 @@ const UploadNewProblem = () => {
 			>
 				Add simple problem
 			</Button>
-			<img src={idExample} alt="s" />
 		</Box>
 	);
 };
