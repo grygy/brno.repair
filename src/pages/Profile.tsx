@@ -1,9 +1,9 @@
 import React from 'react';
 import { Typography } from '@mui/material';
 
-const Home = () => {
+const Profile = () => {
 	const tmp = [];
-	return <Typography variant="h1">Home</Typography>;
+	return <Typography variant="h1">Profile</Typography>;
 };
 
-export default Home;
+export default Profile;
