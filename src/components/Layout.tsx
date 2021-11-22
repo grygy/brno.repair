@@ -9,27 +9,27 @@ const Layout: FC = ({ children }) => {
 			<AppBar position="fixed">
 				<Container maxWidth="sm">
 					<Toolbar disableGutters sx={{ gap: 2 }}>
-						<Button component={Link} to="/">
+						<Button color="secondary" component={Link} to="/">
 							Domů
 						</Button>
-						<Button component={Link} to="/problems">
+						<Button color="secondary" component={Link} to="/problems">
 							Problémy
 						</Button>
-						<Button component={Link} to="/upload-new-problem">
+						<Button color="secondary" component={Link} to="/upload-new-problem">
 							Nahrát problém
 						</Button>
 						<Box sx={{ flexGrow: 1 }} />
 						{user && (
-							<Button component={Link} to="/profile">
+							<Button color="secondary" component={Link} to="/profile">
 								Profil
 							</Button>
 						)}
 						{!user ? (
-							<Button component={Link} to="/login">
+							<Button color="secondary" component={Link} to="/login">
 								Přihlásit se
 							</Button>
 						) : (
-							<Button>Odhlásit se</Button>
+							<Button color="secondary">Odhlásit se</Button>
 						)}
 					</Toolbar>
 				</Container>
