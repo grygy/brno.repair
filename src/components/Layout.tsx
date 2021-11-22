@@ -41,16 +41,13 @@ const Layout: FC = ({ children }) => {
 			</AppBar>
 
 			<Container
-				maxWidth="sm"
+				maxWidth="lg"
 				component="main"
 				sx={{
-					display: 'flex',
-					flexDirection: 'column',
 					justifyContent: 'center',
 					alignItems: 'center',
-					height: '100vh',
-					pt: 8,
-					gap: 2
+
+					pt: 8
 				}}
 			>
 				{children}
