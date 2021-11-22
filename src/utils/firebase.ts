@@ -76,6 +76,8 @@ export type Problem = {
 	// TODO image
 };
 
+export type ProblemWithId = { id: string } & Problem;
+
 export const getProblem = (id: string) =>
 	doc(db, PROBLEMS, id) as DocumentReference<Problem>;
 
@@ -99,7 +101,12 @@ export const getLastProblems = async (limited: number) => {
 		limit(limited)
 	);
 	const querySnapshot = await getDocs(q);
-	return querySnapshot.docs.map(doc => doc.data());
+	return querySnapshot.docs.map(doc => {
+		const problem = doc.data() as Problem;
+		const id = doc.id;
+		const problemWithId = { id, ...problem };
+		return problemWithId as ProblemWithId;
+	});
 };
 
 export const uploadImage = async (image: File) => {

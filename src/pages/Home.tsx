@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Box, CircularProgress, Grid, Paper, Typography } from '@mui/material';
 
-import { Problem, getLastProblems } from '../utils/firebase';
+import { getLastProblems, ProblemWithId } from '../utils/firebase';
 import ProblemPreview from '../components/ProblemPreview';
 
 const Home = () => {
-	const [problems, setProblems] = useState<Problem[]>([]);
+	const [problems, setProblems] = useState<ProblemWithId[]>([]);
 	const [loading, setLoading] = useState(true);
 	useEffect(() => {
 		(async () => {

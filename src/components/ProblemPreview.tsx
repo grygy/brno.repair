@@ -4,19 +4,29 @@ import {
 	CardActions,
 	CardContent,
 	CardMedia,
+	CircularProgress,
 	Divider,
 	Typography
 } from '@mui/material';
-import { FC } from 'react';
+import { FC, useEffect, useState } from 'react';
 
 import useLoggedInUser from '../hooks/useLoggedInUser';
-import { Problem } from '../utils/firebase';
+import { getImage, ProblemWithId } from '../utils/firebase';
 
 type Props = {
-	problem: Problem;
+	problem: ProblemWithId;
 };
 const ProblemPreview: FC<Props> = ({ problem }) => {
 	const user = useLoggedInUser();
+	const [image, setImage] = useState('');
+	const [loading, setLoading] = useState(true);
+
+	useEffect(() => {
+		(async () => {
+			setImage(await getImage(problem.id));
+			setLoading(false);
+		})();
+	}, []);
 
 	// Submit handler
 	const handleResolve = async () => {
@@ -30,6 +40,10 @@ const ProblemPreview: FC<Props> = ({ problem }) => {
 		// 	alert((err as { message?: string })?.message ?? 'Unknown error occurred');
 		// }
 	};
+
+	if (loading) {
+		return <CircularProgress />;
+	}
 
 	return (
 		<Card
@@ -46,7 +60,7 @@ const ProblemPreview: FC<Props> = ({ problem }) => {
 			<CardMedia
 				component="img"
 				height="192"
-				image="logo192.png"
+				image={image}
 				alt="Fotka problemu"
 			/>
 			<CardContent>
