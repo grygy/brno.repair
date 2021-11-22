@@ -20,6 +20,11 @@ import {
 	query,
 	Timestamp
 } from 'firebase/firestore';
+import { getStorage, ref, uploadBytes } from 'firebase/storage';
+
+// Constants
+const IMAGES = 'images/';
+const PROBLEMS = 'problems';
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -55,6 +60,9 @@ export const onAuthChanged = (callback: (u: User | null) => void) =>
 // Firestore
 const db = getFirestore();
 
+// Storage
+const storage = getStorage();
+
 export type Category = 'Doprava' | 'Příroda' | 'Infrastruktura';
 
 export type Problem = {
@@ -69,16 +77,20 @@ export type Problem = {
 };
 
 export const getProblem = (id: string) =>
-	doc(db, 'problems', id) as DocumentReference<Problem>;
+	doc(db, PROBLEMS, id) as DocumentReference<Problem>;
 
 const problemsCollection = collection(
 	db,
-	'problems'
+	PROBLEMS
 ) as CollectionReference<Problem>;
 
-export const addProblem = async (problem: Problem) => {
-	await addDoc(problemsCollection, problem);
-};
+/**
+ * Uploads problem to the databse
+ * @param problem problem to upload
+ * @returns id of added problem
+ */
+export const addProblem = async (problem: Problem) =>
+	(await addDoc(problemsCollection, problem)).id;
 
 export const getLastProblems = async (limited: number) => {
 	const q = query(
@@ -88,4 +100,8 @@ export const getLastProblems = async (limited: number) => {
 	);
 	const querySnapshot = await getDocs(q);
 	return querySnapshot.docs.map(doc => doc.data());
+};
+
+export const uploadImage = async (image: File) => {
+	await uploadBytes(ref(storage, `${IMAGES}${image.name}`), image);
 };
