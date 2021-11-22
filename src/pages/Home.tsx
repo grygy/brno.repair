@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Box, CircularProgress, Typography } from '@mui/material';
+import { Box, CircularProgress, Grid, Paper, Typography } from '@mui/material';
 
 import { Problem, getLastProblems } from '../utils/firebase';
 import ProblemPreview from '../components/ProblemPreview';
@@ -21,8 +21,22 @@ const Home = () => {
 
 	return (
 		<>
-			<Typography mt={2} variant="h4">
-				3 najnovsie problemy
+			<Box alignSelf="center">
+				<Grid container alignItems="center" direction="row" mt={5}>
+					<Grid item>
+						<img src="icon.png" style={{ width: '200px' }} alt="hlavna ikona" />
+					</Grid>
+					<Grid item>
+						<Typography variant="h1" fontWeight="bolder">
+							Brno. <br />
+							Repair
+						</Typography>
+					</Grid>
+				</Grid>
+			</Box>
+
+			<Typography mt={5} mb={2} variant="h4" color="#cb0e21">
+				TOP 3 problemy
 			</Typography>
 			<Box sx={{ display: 'flex', gap: 2 }}>
 				{problems.map(problem => (

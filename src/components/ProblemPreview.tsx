@@ -39,7 +39,8 @@ const ProblemPreview: FC<Props> = ({ problem }) => {
 				justifyContent: 'start',
 				width: '100%',
 				textAlign: 'left',
-				minWidth: '300px'
+				minWidth: '300px',
+				borderColor: '#cb0e21'
 			}}
 		>
 			<CardMedia
