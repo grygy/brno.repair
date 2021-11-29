@@ -13,7 +13,6 @@ import {
 } from '@mui/material';
 import { getAuth, sendPasswordResetEmail } from 'firebase/auth';
 import { LoadingButton } from '@mui/lab';
-import SendIcon from '@mui/icons-material/Send';
 
 import {
 	addUserProfile,
@@ -25,13 +24,15 @@ import useLoggedInUser from '../hooks/useLoggedInUser';
 
 const Profile = () => {
 	const user = useLoggedInUser();
-
 	const [userProfile, setUserProfile] = useState<UserProfile | undefined>(
 		undefined
 	);
+
 	const [loading, setLoading] = useState(true);
 	type ShowAlert = 'none' | 'info' | 'error' | 'success';
 	const [showAlert, setShowAlert] = useState<ShowAlert>('none');
+	const [saveLoading, setSaveLoading] = useState<boolean>(false);
+	const [resetLoading, setResetLoading] = useState<boolean>(false);
 
 	const [userName, setUserName] = useState<string>('');
 	const [userSurname, setUserSurname] = useState<string>('');
@@ -55,6 +56,7 @@ const Profile = () => {
 	}, [user?.email]);
 
 	const handleSubmit = async () => {
+		setSaveLoading(true);
 		if (userProfile === undefined) {
 			// add new doc into DB
 			const newProfile: UserProfile = {
@@ -68,6 +70,7 @@ const Profile = () => {
 			await updateUserProfile(user?.email ?? '', userName, userSurname);
 		}
 		setShowAlert('success');
+		setSaveLoading(false);
 	};
 	if (loading) {
 		return <CircularProgress />;
@@ -109,41 +112,36 @@ const Profile = () => {
 				display="flex"
 				justifyContent="left"
 			>
-				<Button
+				<LoadingButton
+					loading={resetLoading}
+					loadingPosition="end"
 					sx={{ marginRight: '10px' }}
 					color="error"
 					variant="contained"
-					onClick={() => {
-						sendPasswordResetEmail(auth, user?.email ?? '')
+					onClick={async () => {
+						setResetLoading(true);
+						await sendPasswordResetEmail(auth, user?.email ?? '')
 							.then(() => {
 								setShowAlert('info');
 							})
 							.catch(() => {
 								setShowAlert('error');
 							});
+						setResetLoading(false);
 					}}
 				>
 					Obnovit heslo
-				</Button>
+				</LoadingButton>
 
-				<Button
-					sx={{ marginLeft: '10px' }}
-					color="success"
-					variant="contained"
-					onClick={handleSubmit}
-				>
-					Ulozit zmeny
-				</Button>
 				<LoadingButton
-					endIcon={<SendIcon />}
-					loading={loading}
+					loading={saveLoading}
 					loadingPosition="end"
 					variant="contained"
 					sx={{ marginLeft: '10px' }}
 					color="success"
 					onClick={handleSubmit}
 				>
-					Save
+					Ulozit zmeny
 				</LoadingButton>
 			</Box>
 
