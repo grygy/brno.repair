@@ -17,6 +17,7 @@ const useDetail = (id: string) => {
 			setResolved(results[0].resolved !== null);
 			setLoading(false);
 		} catch (err) {
+			setLoading(false);
 			setError((err as { message?: string })?.message ?? 'Neznámá chyba');
 		}
 	};

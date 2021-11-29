@@ -1,6 +1,13 @@
 import React, { FC, useState } from 'react';
-import { Box, CircularProgress, Grid, Stack, Typography } from '@mui/material';
-import { match, RouteComponentProps } from 'react-router-dom';
+import {
+	Box,
+	Button,
+	CircularProgress,
+	Grid,
+	Stack,
+	Typography
+} from '@mui/material';
+import { match, RouteComponentProps, useHistory } from 'react-router-dom';
 import { LoadingButton } from '@mui/lab';
 import DoneIcon from '@mui/icons-material/Done';
 
@@ -14,6 +21,7 @@ const Detail: FC<RouteComponentProps<{ id: string }>> = ({ match }) => {
 	const [problem, loading, imageUrl, error, resolved, setResolved] =
 		useDetail(id);
 	const [savingResolved, setSavingResolved] = useState(false);
+	const history = useHistory();
 
 	// Submit handler
 	const handleResolve = async (id: string) => {
@@ -39,7 +47,24 @@ const Detail: FC<RouteComponentProps<{ id: string }>> = ({ match }) => {
 	}
 
 	if (error !== '' || problem === undefined) {
-		return <Typography>{error}</Typography>;
+		return (
+			<Box
+				sx={{
+					bgcolor: 'background.paper',
+					pt: 8,
+					pb: 6,
+					textAlign: 'left'
+				}}
+			>
+				<Typography mb={2} variant="h4">
+					Error:
+				</Typography>
+				<Typography>{error}</Typography>
+				<Button variant="contained" onClick={() => history.push('/')}>
+					Jít zpět
+				</Button>
+			</Box>
+		);
 	}
 
 	return (
