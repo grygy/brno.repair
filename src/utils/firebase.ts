@@ -63,7 +63,13 @@ const db = getFirestore();
 // Storage
 const storage = getStorage();
 
-export type Category = 'Doprava' | 'Příroda' | 'Infrastruktura';
+export const categories = [
+	'Doprava',
+	'Příroda',
+	'Infrastruktura',
+	'Ine'
+] as const;
+export type Category = typeof categories[number];
 
 export type Problem = {
 	title: string;
@@ -73,7 +79,6 @@ export type Problem = {
 	created: Timestamp;
 	resolved: Timestamp | null;
 	category: Category;
-	// TODO image
 };
 
 export type ProblemWithId = { id: string } & Problem;
