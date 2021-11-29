@@ -69,9 +69,13 @@ const ProblemPreview: FC<Props> = ({ problem }) => {
 				<Typography color="textSecondary">
 					<b>Kategorie: </b> {problem.category}
 				</Typography>
-				{(resolved || problem.resolved !== null) && (
+				{resolved || problem.resolved !== null ? (
 					<Box mt={2} sx={{ color: 'success.main', textAlign: 'center' }}>
-						<Typography variant="h6">Problem was solved</Typography>
+						<Typography variant="h6">Vyřešen</Typography>
+					</Box>
+				) : (
+					<Box mt={2} sx={{ color: 'primary.main', textAlign: 'center' }}>
+						<Typography variant="h6">Nevyřešen</Typography>
 					</Box>
 				)}
 			</CardContent>
@@ -86,7 +90,7 @@ const ProblemPreview: FC<Props> = ({ problem }) => {
 							onClick={() => handleResolve(problem.id)}
 							loadingPosition="start"
 						>
-							Vyřešit problém
+							Vyřešen
 						</LoadingButton>
 					</Box>
 				</CardActions>

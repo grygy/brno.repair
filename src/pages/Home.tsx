@@ -70,7 +70,7 @@ const Home = () => {
 									variant="contained"
 									onClick={() => history.push('/upload-new-problem')}
 								>
-									Přidej nový problém
+									Přidejte nový problém
 								</Button>
 							</Stack>
 						</Grid>
