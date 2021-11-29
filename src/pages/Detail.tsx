@@ -11,8 +11,8 @@ import { resolveProblem } from '../utils/firebase';
 const Detail: FC<RouteComponentProps<{ id: string }>> = ({ match }) => {
 	const id = match.params.id;
 	const user = useLoggedInUser();
-	const [problem, loading, imageUrl, error] = useDetail(id);
-	const [resolved, setResolved] = useState(problem?.resolved !== null);
+	const [problem, loading, imageUrl, error, resolved, setResolved] =
+		useDetail(id);
 	const [savingResolved, setSavingResolved] = useState(false);
 
 	// Submit handler
@@ -92,7 +92,7 @@ const Detail: FC<RouteComponentProps<{ id: string }>> = ({ match }) => {
 						{user?.uid === problem.author &&
 							problem.resolved === null &&
 							!resolved && (
-								<Box mb={2} sx={{ width: '100%', textAlign: 'center' }}>
+								<Box mb={2}>
 									<LoadingButton
 										startIcon={<DoneIcon />}
 										color="success"
