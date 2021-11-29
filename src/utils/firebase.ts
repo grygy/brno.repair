@@ -18,7 +18,8 @@ import {
 	limit,
 	orderBy,
 	query,
-	Timestamp
+	Timestamp,
+	updateDoc
 } from 'firebase/firestore';
 import { getDownloadURL, getStorage, ref, uploadBytes } from 'firebase/storage';
 
@@ -115,3 +116,7 @@ export const uploadImage = async (image: File) => {
 
 export const getImage = async (id: string) =>
 	await getDownloadURL(ref(storage, `${IMAGES}${id}.jpg`));
+
+export const resolveProblem = async (id: string) => {
+	await updateDoc(doc(db, PROBLEMS, id), { resolved: Timestamp.now() });
+};

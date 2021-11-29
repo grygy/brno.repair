@@ -1,5 +1,8 @@
+import { setTimeout } from 'timers';
+
+import { LoadingButton } from '@mui/lab';
 import {
-	Button,
+	Box,
 	Card,
 	CardActions,
 	CardContent,
@@ -8,18 +11,21 @@ import {
 	Divider,
 	Typography
 } from '@mui/material';
+import DoneIcon from '@mui/icons-material/Done';
 import { FC, useEffect, useState } from 'react';
 
 import useLoggedInUser from '../hooks/useLoggedInUser';
-import { getImage, ProblemWithId } from '../utils/firebase';
+import { getImage, ProblemWithId, resolveProblem } from '../utils/firebase';
 
 type Props = {
 	problem: ProblemWithId;
 };
 const ProblemPreview: FC<Props> = ({ problem }) => {
 	const user = useLoggedInUser();
+	const [savingResolved, setSavingResolved] = useState(false);
 	const [image, setImage] = useState('');
 	const [loading, setLoading] = useState(true);
+	const [resolved, setResolved] = useState(problem.resolved !== null);
 
 	useEffect(() => {
 		(async () => {
@@ -29,16 +35,11 @@ const ProblemPreview: FC<Props> = ({ problem }) => {
 	}, []);
 
 	// Submit handler
-	const handleResolve = async () => {
-		// console.log('trying to delete');
-		// if (!user?.email) {
-		// 	return;
-		// }
-		// try {
-		// 	await deleteDoc(reviewsDocument(user.email));
-		// } catch (err) {
-		// 	alert((err as { message?: string })?.message ?? 'Unknown error occurred');
-		// }
+	const handleResolve = async (id: string) => {
+		setSavingResolved(true);
+		await resolveProblem(id);
+		setResolved(true);
+		setSavingResolved(false);
 	};
 
 	if (loading) {
@@ -48,18 +49,15 @@ const ProblemPreview: FC<Props> = ({ problem }) => {
 	return (
 		<Card
 			sx={{
-				display: 'flex',
-				flexDirection: 'column',
 				justifyContent: 'start',
 				width: '100%',
 				textAlign: 'left',
-				minWidth: '300px',
 				borderColor: '#cb0e21'
 			}}
 		>
 			<CardMedia
 				component="img"
-				height="192"
+				height="auto"
 				image={image}
 				alt="Fotka problemu"
 			/>
@@ -69,14 +67,32 @@ const ProblemPreview: FC<Props> = ({ problem }) => {
 				</Typography>
 				<Divider sx={{ my: 2 }} />
 				<Typography color="textSecondary">
-					<b>Kategoria: </b> {problem.category}
+					<b>Kategorie: </b> {problem.category}
 				</Typography>
+				{resolved || problem.resolved !== null ? (
+					<Box mt={2} sx={{ color: 'success.main', textAlign: 'center' }}>
+						<Typography variant="h6">Vyřešen</Typography>
+					</Box>
+				) : (
+					<Box mt={2} sx={{ color: 'primary.main', textAlign: 'center' }}>
+						<Typography variant="h6">Nevyřešen</Typography>
+					</Box>
+				)}
 			</CardContent>
-			{user?.uid === problem.author && (
+			{user?.uid === problem.author && problem.resolved === null && !resolved && (
 				<CardActions>
-					<Button color="success" variant="outlined" onClick={handleResolve}>
-						Vyriesit problem
-					</Button>
+					<Box mb={2} sx={{ width: '100%', textAlign: 'center' }}>
+						<LoadingButton
+							startIcon={<DoneIcon />}
+							color="success"
+							variant="outlined"
+							loading={savingResolved}
+							onClick={() => handleResolve(problem.id)}
+							loadingPosition="start"
+						>
+							Vyřešen
+						</LoadingButton>
+					</Box>
 				</CardActions>
 			)}
 		</Card>
