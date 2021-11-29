@@ -1,5 +1,8 @@
+import { setTimeout } from 'timers';
+
+import { LoadingButton } from '@mui/lab';
 import {
-	Button,
+	Box,
 	Card,
 	CardActions,
 	CardContent,
@@ -8,6 +11,7 @@ import {
 	Divider,
 	Typography
 } from '@mui/material';
+import DoneIcon from '@mui/icons-material/Done';
 import { FC, useEffect, useState } from 'react';
 
 import useLoggedInUser from '../hooks/useLoggedInUser';
@@ -18,6 +22,7 @@ type Props = {
 };
 const ProblemPreview: FC<Props> = ({ problem }) => {
 	const user = useLoggedInUser();
+	const [savingResolved, setSavingResolved] = useState(false);
 	const [image, setImage] = useState('');
 	const [loading, setLoading] = useState(true);
 
@@ -30,6 +35,8 @@ const ProblemPreview: FC<Props> = ({ problem }) => {
 
 	// Submit handler
 	const handleResolve = async () => {
+		setSavingResolved(true);
+		// TODO
 		// console.log('trying to delete');
 		// if (!user?.email) {
 		// 	return;
@@ -39,6 +46,9 @@ const ProblemPreview: FC<Props> = ({ problem }) => {
 		// } catch (err) {
 		// 	alert((err as { message?: string })?.message ?? 'Unknown error occurred');
 		// }
+		setTimeout(() => {
+			setSavingResolved(false);
+		}, 2000);
 	};
 
 	if (loading) {
@@ -48,18 +58,15 @@ const ProblemPreview: FC<Props> = ({ problem }) => {
 	return (
 		<Card
 			sx={{
-				display: 'flex',
-				flexDirection: 'column',
 				justifyContent: 'start',
 				width: '100%',
 				textAlign: 'left',
-				minWidth: '300px',
 				borderColor: '#cb0e21'
 			}}
 		>
 			<CardMedia
 				component="img"
-				height="192"
+				height="auto"
 				image={image}
 				alt="Fotka problemu"
 			/>
@@ -69,14 +76,23 @@ const ProblemPreview: FC<Props> = ({ problem }) => {
 				</Typography>
 				<Divider sx={{ my: 2 }} />
 				<Typography color="textSecondary">
-					<b>Kategoria: </b> {problem.category}
+					<b>Kategorie: </b> {problem.category}
 				</Typography>
 			</CardContent>
 			{user?.uid === problem.author && (
 				<CardActions>
-					<Button color="success" variant="outlined" onClick={handleResolve}>
-						Vyriesit problem
-					</Button>
+					<Box mb={2} sx={{ width: '100%', textAlign: 'center' }}>
+						<LoadingButton
+							startIcon={<DoneIcon />}
+							color="success"
+							variant="outlined"
+							loading={savingResolved}
+							onClick={handleResolve}
+							loadingPosition="start"
+						>
+							Vyřešit problém
+						</LoadingButton>
+					</Box>
 				</CardActions>
 			)}
 		</Card>

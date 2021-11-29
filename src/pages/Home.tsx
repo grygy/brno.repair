@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Box, CircularProgress, Grid, Paper, Typography } from '@mui/material';
+import { Box, CircularProgress, Grid, Typography } from '@mui/material';
 
 import { getLastProblems, ProblemWithId } from '../utils/firebase';
 import ProblemPreview from '../components/ProblemPreview';
@@ -36,13 +36,22 @@ const Home = () => {
 			</Box>
 
 			<Typography mt={5} mb={2} variant="h4" color="#cb0e21">
-				TOP 3 problemy
+				Nově přidané problémy
 			</Typography>
-			<Box sx={{ display: 'flex', gap: 2 }}>
+			<Grid container spacing={2}>
 				{problems.map(problem => (
-					<ProblemPreview key={problem.created.toString()} problem={problem} />
+					<Grid
+						key={problem.created.toString()}
+						item
+						xs={12}
+						sm={6}
+						md={4}
+						lg={4}
+					>
+						<ProblemPreview problem={problem} />
+					</Grid>
 				))}
-			</Box>
+			</Grid>
 		</>
 	);
 };
