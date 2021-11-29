@@ -153,7 +153,7 @@ export const getUserProfile = async (email: string) => {
 			return res.data() as UserProfile;
 		} else {
 			// todo tohle se provadi
-			console.log('Neexi suje pico');
+			console.error('Neexistuje doc');
 		}
 	} catch (err) {
 		console.error(err);

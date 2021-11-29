@@ -23,23 +23,18 @@ const Profile = () => {
 	);
 	const [loading, setLoading] = useState(true);
 
-	const [userName, setUserName] = useState<string>(userProfile?.name ?? '');
-	const [userSurname, setUserSurname] = useState<string>(
-		userProfile?.name ?? ''
-	);
-
-	console.log(user?.email);
-
-	// console.log(userName, userSurname);
-	// console.log(userProfile);
+	const [userName, setUserName] = useState<string>('');
+	const [userSurname, setUserSurname] = useState<string>('');
 
 	useEffect(() => {
 		(async () => {
 			if (user?.email) {
 				console.log('volam sa');
-				setUserProfile(await getUserProfile(user?.email ?? ''));
-				// setUserName(userProfile?.name ?? '');
-				// setUserSurname(userProfile?.surname ?? '');
+				const res = await getUserProfile(user?.email ?? '');
+				console.log(res);
+				setUserProfile(res);
+				setUserName(res!.name);
+				setUserSurname(res!.surname);
 				setLoading(false);
 			}
 		})();
