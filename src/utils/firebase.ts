@@ -13,11 +13,13 @@ import {
 	CollectionReference,
 	doc,
 	DocumentReference,
+	getDoc,
 	getDocs,
 	getFirestore,
 	limit,
 	orderBy,
 	query,
+	setDoc,
 	Timestamp,
 	updateDoc
 } from 'firebase/firestore';
@@ -26,6 +28,7 @@ import { getDownloadURL, getStorage, ref, uploadBytes } from 'firebase/storage';
 // Constants
 const IMAGES = 'images/';
 const PROBLEMS = 'problems';
+const USER_PROFILES = 'userProfiles';
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -125,3 +128,50 @@ export const getImage = async (id: string) =>
 export const resolveProblem = async (id: string) => {
 	await updateDoc(doc(db, PROBLEMS, id), { resolved: Timestamp.now() });
 };
+
+// -------------------- USER PROFILE ----------------------
+export type UserProfile = {
+	email: string;
+	name: string;
+	surname: string;
+};
+
+const profileCollection = collection(
+	db,
+	USER_PROFILES
+) as CollectionReference<UserProfile>;
+
+export const getUserProfile = async (email: string) => {
+	try {
+		// todo tady je problem
+		console.log(email);
+		const res = await getDoc(doc(db, USER_PROFILES, email));
+		console.log(res);
+		if (res.exists()) {
+			return res.data() as UserProfile;
+		} else {
+			// todo tohle se provadi
+			console.log('Neexi suje pico');
+		}
+	} catch (err) {
+		console.error(err);
+		return undefined;
+	}
+};
+
+export const updateUserProfile = async (
+	email: string,
+	name: string,
+	surname: string
+) => {
+	await updateDoc(doc(db, USER_PROFILES, email), {
+		name,
+		surname
+	});
+};
+
+export const addUserProfile = async (userProfile: UserProfile) =>
+	await setDoc(doc(db, USER_PROFILES, userProfile.email), {
+		name: userProfile.name,
+		surname: userProfile.surname
+	});
