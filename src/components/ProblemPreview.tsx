@@ -1,5 +1,3 @@
-import { setTimeout } from 'timers';
-
 import { LoadingButton } from '@mui/lab';
 import {
 	Box,
@@ -9,6 +7,7 @@ import {
 	CardMedia,
 	CircularProgress,
 	Divider,
+	Link,
 	Typography
 } from '@mui/material';
 import DoneIcon from '@mui/icons-material/Done';
@@ -47,55 +46,59 @@ const ProblemPreview: FC<Props> = ({ problem }) => {
 	}
 
 	return (
-		<Card
-			sx={{
-				justifyContent: 'start',
-				width: '100%',
-				textAlign: 'left',
-				borderColor: '#cb0e21'
-			}}
-		>
-			<CardMedia
-				component="img"
-				height="auto"
-				image={image}
-				alt="Fotka problemu"
-			/>
-			<CardContent>
-				<Typography variant="h5" color="textSecondary">
-					{problem.title}
-				</Typography>
-				<Divider sx={{ my: 2 }} />
-				<Typography color="textSecondary">
-					<b>Kategorie: </b> {problem.category}
-				</Typography>
-				{resolved || problem.resolved !== null ? (
-					<Box mt={2} sx={{ color: 'success.main', textAlign: 'center' }}>
-						<Typography variant="h6">Vyřešen</Typography>
-					</Box>
-				) : (
-					<Box mt={2} sx={{ color: 'primary.main', textAlign: 'center' }}>
-						<Typography variant="h6">Nevyřešen</Typography>
-					</Box>
-				)}
-			</CardContent>
-			{user?.uid === problem.author && problem.resolved === null && !resolved && (
-				<CardActions>
-					<Box mb={2} sx={{ width: '100%', textAlign: 'center' }}>
-						<LoadingButton
-							startIcon={<DoneIcon />}
-							color="success"
-							variant="outlined"
-							loading={savingResolved}
-							onClick={() => handleResolve(problem.id)}
-							loadingPosition="start"
-						>
-							Vyřešen
-						</LoadingButton>
-					</Box>
-				</CardActions>
-			)}
-		</Card>
+		<Link href={`/detail/${problem.id}`} sx={{ textDecoration: 'none' }}>
+			<Card
+				sx={{
+					justifyContent: 'start',
+					width: '100%',
+					textAlign: 'left',
+					borderColor: '#cb0e21'
+				}}
+			>
+				<CardMedia
+					component="img"
+					height="auto"
+					image={image}
+					alt="Fotka problemu"
+				/>
+				<CardContent>
+					<Typography variant="h5" color="textSecondary">
+						{problem.title}
+					</Typography>
+					<Divider sx={{ my: 2 }} />
+					<Typography color="textSecondary">
+						<b>Kategorie: </b> {problem.category}
+					</Typography>
+					{resolved || problem.resolved !== null ? (
+						<Box mt={2} sx={{ color: 'success.main', textAlign: 'center' }}>
+							<Typography variant="h6">Vyřešen</Typography>
+						</Box>
+					) : (
+						<Box mt={2} sx={{ color: 'primary.main', textAlign: 'center' }}>
+							<Typography variant="h6">Přetrvávající</Typography>
+						</Box>
+					)}
+				</CardContent>
+				{user?.uid === problem.author &&
+					problem.resolved === null &&
+					!resolved && (
+						<CardActions>
+							<Box mb={2} sx={{ width: '100%', textAlign: 'center' }}>
+								<LoadingButton
+									startIcon={<DoneIcon />}
+									color="success"
+									variant="outlined"
+									loading={savingResolved}
+									onClick={() => handleResolve(problem.id)}
+									loadingPosition="start"
+								>
+									Vyřešit
+								</LoadingButton>
+							</Box>
+						</CardActions>
+					)}
+			</Card>
+		</Link>
 	);
 };
 
