@@ -3,9 +3,17 @@ import {
 	Box,
 	Button,
 	CircularProgress,
+	Dialog,
+	DialogActions,
+	DialogContent,
+	DialogContentText,
+	DialogTitle,
 	TextField,
 	Typography
 } from '@mui/material';
+import { getAuth, sendPasswordResetEmail } from 'firebase/auth';
+import { LoadingButton } from '@mui/lab';
+import SendIcon from '@mui/icons-material/Send';
 
 import {
 	addUserProfile,
@@ -22,9 +30,13 @@ const Profile = () => {
 		undefined
 	);
 	const [loading, setLoading] = useState(true);
+	type ShowAlert = 'none' | 'info' | 'error' | 'success';
+	const [showAlert, setShowAlert] = useState<ShowAlert>('none');
 
 	const [userName, setUserName] = useState<string>('');
 	const [userSurname, setUserSurname] = useState<string>('');
+
+	const auth = getAuth();
 
 	useEffect(() => {
 		(async () => {
@@ -33,8 +45,10 @@ const Profile = () => {
 				const res = await getUserProfile(user?.email ?? '');
 				console.log(res);
 				setUserProfile(res);
-				setUserName(res!.name);
-				setUserSurname(res!.surname);
+				if (res) {
+					setUserName(res.name);
+					setUserSurname(res.surname);
+				}
 				setLoading(false);
 			}
 		})();
@@ -53,6 +67,7 @@ const Profile = () => {
 			// update existing doc with name and surname
 			await updateUserProfile(user?.email ?? '', userName, userSurname);
 		}
+		setShowAlert('success');
 	};
 	if (loading) {
 		return <CircularProgress />;
@@ -94,7 +109,20 @@ const Profile = () => {
 				display="flex"
 				justifyContent="left"
 			>
-				<Button sx={{ marginRight: '10px' }} color="error" variant="contained">
+				<Button
+					sx={{ marginRight: '10px' }}
+					color="error"
+					variant="contained"
+					onClick={() => {
+						sendPasswordResetEmail(auth, user?.email ?? '')
+							.then(() => {
+								setShowAlert('info');
+							})
+							.catch(() => {
+								setShowAlert('error');
+							});
+					}}
+				>
 					Obnovit heslo
 				</Button>
 
@@ -106,7 +134,49 @@ const Profile = () => {
 				>
 					Ulozit zmeny
 				</Button>
+				<LoadingButton
+					endIcon={<SendIcon />}
+					loading={loading}
+					loadingPosition="end"
+					variant="contained"
+					sx={{ marginLeft: '10px' }}
+					color="success"
+					onClick={handleSubmit}
+				>
+					Save
+				</LoadingButton>
 			</Box>
+
+			<div>
+				<Dialog
+					open={showAlert !== 'none'}
+					onClose={() => setShowAlert('none')}
+					aria-labelledby="alert-dialog-title"
+					aria-describedby="alert-dialog-description"
+				>
+					<DialogTitle id="alert-dialog-title">
+						{showAlert === 'info' && <div> Obnova hesla uspesna </div>}
+						{showAlert === 'success' && <div> Zmena udajov uspesna </div>}
+						{showAlert === 'error' && <div> Operacia nebola uspesna </div>}
+					</DialogTitle>
+					<DialogContent>
+						<DialogContentText id="alert-dialog-description">
+							{showAlert === 'info' && (
+								<div> Pokyny k zmene hesla boli odoslane na vas email. </div>
+							)}
+							{showAlert === 'success' && (
+								<div> Meno a priezvisko boli akutalizovane. </div>
+							)}
+							{showAlert === 'error' && (
+								<div> Zial, nastala chyba. Skuste to neskor, prosim. </div>
+							)}
+						</DialogContentText>
+					</DialogContent>
+					<DialogActions>
+						<Button onClick={() => setShowAlert('none')}>okay</Button>
+					</DialogActions>
+				</Dialog>
+			</div>
 		</>
 	);
 };

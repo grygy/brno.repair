@@ -12,7 +12,6 @@ import {
 	collection,
 	CollectionReference,
 	doc,
-	DocumentReference,
 	getDoc,
 	getDocs,
 	getFirestore,
@@ -137,11 +136,6 @@ export type UserProfile = {
 	name: string;
 	surname: string;
 };
-
-const profileCollection = collection(
-	db,
-	USER_PROFILES
-) as CollectionReference<UserProfile>;
 
 export const getUserProfile = async (email: string) => {
 	try {
