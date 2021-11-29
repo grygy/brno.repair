@@ -13,6 +13,7 @@ import {
 	CollectionReference,
 	doc,
 	DocumentReference,
+	getDoc,
 	getDocs,
 	getFirestore,
 	limit,
@@ -84,8 +85,10 @@ export type Problem = {
 
 export type ProblemWithId = { id: string } & Problem;
 
-export const getProblem = (id: string) =>
-	doc(db, PROBLEMS, id) as DocumentReference<Problem>;
+export const getProblem = async (id: string) => {
+	const res = await getDoc(doc(db, PROBLEMS, id));
+	return { ...res.data(), id } as ProblemWithId;
+};
 
 const problemsCollection = collection(
 	db,
