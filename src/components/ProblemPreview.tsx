@@ -15,7 +15,7 @@ import DoneIcon from '@mui/icons-material/Done';
 import { FC, useEffect, useState } from 'react';
 
 import useLoggedInUser from '../hooks/useLoggedInUser';
-import { getImage, ProblemWithId } from '../utils/firebase';
+import { getImage, ProblemWithId, resolveProblem } from '../utils/firebase';
 
 type Props = {
 	problem: ProblemWithId;
@@ -25,6 +25,7 @@ const ProblemPreview: FC<Props> = ({ problem }) => {
 	const [savingResolved, setSavingResolved] = useState(false);
 	const [image, setImage] = useState('');
 	const [loading, setLoading] = useState(true);
+	const [resolved, setResolved] = useState(problem.resolved !== null);
 
 	useEffect(() => {
 		(async () => {
@@ -34,21 +35,11 @@ const ProblemPreview: FC<Props> = ({ problem }) => {
 	}, []);
 
 	// Submit handler
-	const handleResolve = async () => {
+	const handleResolve = async (id: string) => {
 		setSavingResolved(true);
-		// TODO
-		// console.log('trying to delete');
-		// if (!user?.email) {
-		// 	return;
-		// }
-		// try {
-		// 	await deleteDoc(reviewsDocument(user.email));
-		// } catch (err) {
-		// 	alert((err as { message?: string })?.message ?? 'Unknown error occurred');
-		// }
-		setTimeout(() => {
-			setSavingResolved(false);
-		}, 2000);
+		await resolveProblem(id);
+		setResolved(true);
+		setSavingResolved(false);
 	};
 
 	if (loading) {
@@ -78,8 +69,13 @@ const ProblemPreview: FC<Props> = ({ problem }) => {
 				<Typography color="textSecondary">
 					<b>Kategorie: </b> {problem.category}
 				</Typography>
+				{(resolved || problem.resolved !== null) && (
+					<Box mt={2} sx={{ color: 'success.main', textAlign: 'center' }}>
+						<Typography variant="h6">Problem was solved</Typography>
+					</Box>
+				)}
 			</CardContent>
-			{user?.uid === problem.author && (
+			{user?.uid === problem.author && problem.resolved === null && !resolved && (
 				<CardActions>
 					<Box mb={2} sx={{ width: '100%', textAlign: 'center' }}>
 						<LoadingButton
@@ -87,7 +83,7 @@ const ProblemPreview: FC<Props> = ({ problem }) => {
 							color="success"
 							variant="outlined"
 							loading={savingResolved}
-							onClick={handleResolve}
+							onClick={() => handleResolve(problem.id)}
 							loadingPosition="start"
 						>
 							Vyřešit problém
