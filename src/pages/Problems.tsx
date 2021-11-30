@@ -13,11 +13,15 @@ const Problems = () => {
 		QueryDocumentSnapshot<DocumentData> | undefined
 	>(undefined);
 	const [fetching, setFetching] = useState(false);
+	const [isThereNext, setIsThereNext] = useState(true);
 
 	const setData = async () => {
 		const [newProblems, last] = await getProblemsWithPagination(lastVisible);
 		setProblems([...problems, ...newProblems]);
 		setLastVisible(last);
+		if (newProblems.length === 0) {
+			setIsThereNext(false);
+		}
 	};
 
 	useEffect(() => {
@@ -65,9 +69,15 @@ const Problems = () => {
 					))}
 				</Grid>
 			)}
-			<LoadingButton loading={fetching} onClick={fetchMoreProblems}>
-				more
-			</LoadingButton>
+			<Box
+				hidden={!isThereNext}
+				mb={2}
+				sx={{ width: '100%', textAlign: 'center' }}
+			>
+				<LoadingButton loading={fetching} onClick={fetchMoreProblems}>
+					Načíst další
+				</LoadingButton>
+			</Box>
 		</Box>
 	);
 };
