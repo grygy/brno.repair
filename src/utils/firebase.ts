@@ -13,7 +13,6 @@ import {
 	CollectionReference,
 	doc,
 	DocumentData,
-	DocumentReference,
 	getDoc,
 	getDocs,
 	getFirestore,
