@@ -52,7 +52,7 @@ const Problems = () => {
 
 	const filter = async () => {
 		const [newProblems, last] = await getProblemsWithPagination(
-			lastVisible,
+			undefined,
 			category,
 			resolved
 		);
