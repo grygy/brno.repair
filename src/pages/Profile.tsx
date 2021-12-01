@@ -47,18 +47,16 @@ const Profile = () => {
 	const [problemsLoading, setProblemsLoading] = useState(true);
 	useEffect(() => {
 		(async () => {
-			const res = await getUserProblems(user?.uid ?? '');
+			const res = await getUserProblems(user?.email ?? '');
 			setProblems(res);
 			setProblemsLoading(false);
 		})();
-	}, []);
+	}, [user?.email]);
 
 	useEffect(() => {
 		(async () => {
 			if (user?.email) {
-				console.log('volam sa');
 				const res = await getUserProfile(user?.email ?? '');
-				console.log(res);
 				setUserProfile(res);
 				if (res) {
 					setUserName(res.name);
@@ -149,7 +147,7 @@ const Profile = () => {
 
 				<LoadingButton
 					loading={saveLoading}
-					loadingPosition="end"
+					// loadingPosition="end"
 					variant="contained"
 					sx={{ marginLeft: '10px' }}
 					color="success"
