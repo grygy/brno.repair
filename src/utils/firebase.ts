@@ -12,23 +12,17 @@ import {
 	collection,
 	CollectionReference,
 	doc,
-
-
 	DocumentData,
 	DocumentReference,
-
 	getDoc,
 	getDocs,
 	getFirestore,
 	limit,
 	orderBy,
 	query,
-
 	setDoc,
-
 	QueryDocumentSnapshot,
 	startAfter,
-
 	Timestamp,
 	updateDoc
 } from 'firebase/firestore';
@@ -140,7 +134,6 @@ export const resolveProblem = async (id: string) => {
 	await updateDoc(doc(db, PROBLEMS, id), { resolved: Timestamp.now() });
 };
 
-
 // -------------------- USER PROFILE ----------------------
 export type UserProfile = {
 	email: string;
@@ -214,4 +207,3 @@ export const getProblemsWithPagination = async (
 	});
 	return [problems, last] as const;
 };
-

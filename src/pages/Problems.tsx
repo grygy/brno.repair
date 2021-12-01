@@ -4,11 +4,7 @@ import { DocumentData, QueryDocumentSnapshot } from '@firebase/firestore';
 import { LoadingButton } from '@mui/lab';
 
 import ProblemPreview from '../components/ProblemPreview';
-import {
-	ProblemWithId,
-	getLastProblems,
-	getProblemsWithPagination
-} from '../utils/firebase';
+import { ProblemWithId, getProblemsWithPagination } from '../utils/firebase';
 
 const Problems = () => {
 	const [loading, setLoading] = useState(true);

@@ -7,7 +7,7 @@ import {
 	Stack,
 	Typography
 } from '@mui/material';
-import { match, RouteComponentProps, useHistory } from 'react-router-dom';
+import { RouteComponentProps, useHistory } from 'react-router-dom';
 import { LoadingButton } from '@mui/lab';
 import DoneIcon from '@mui/icons-material/Done';
 
