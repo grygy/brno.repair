@@ -107,20 +107,31 @@ const Home = () => {
 					<CircularProgress size={100} />
 				</Box>
 			) : (
-				<Grid container spacing={2}>
-					{problems.map(problem => (
-						<Grid
-							key={problem.created.toString()}
-							item
-							xs={12}
-							sm={6}
-							md={4}
-							lg={4}
-						>
-							<ProblemPreview problem={problem} />
-						</Grid>
-					))}
-				</Grid>
+				<Box sx={{ textAlign: 'center' }}>
+					<Grid container spacing={2}>
+						{problems.map(problem => (
+							<Grid
+								key={problem.created.toString()}
+								item
+								xs={12}
+								sm={6}
+								md={4}
+								lg={4}
+							>
+								<ProblemPreview problem={problem} />
+							</Grid>
+						))}
+					</Grid>
+					<Button
+						variant="contained"
+						sx={{ mt: 4, mb: 6 }}
+						onClick={() => {
+							history.push('/problems');
+						}}
+					>
+						Zobrazit všechny problémy
+					</Button>
+				</Box>
 			)}
 		</>
 	);
