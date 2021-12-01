@@ -50,6 +50,13 @@ const UploadNewProblem = () => {
 		}
 	};
 
+	const resetFields = () => {
+		setImage(null);
+		setProblemName('');
+		setProblemLocation('');
+		setProblemCategory('Ine');
+		setProblemDescription('');
+	};
 	return (
 		<>
 			<Box
@@ -66,18 +73,21 @@ const UploadNewProblem = () => {
 						required
 						label="Nazev"
 						defaultValue=""
+						value={problemName}
 						onChange={e => setProblemName(e.target.value)}
 					/>
 					<TextField
 						required
 						label="Lokace"
 						defaultValue=""
+						value={problemLocation}
 						onChange={e => setProblemLocation(e.target.value)}
 					/>
 					<FormLabel component="legend">Kategoria</FormLabel>
 					<RadioGroup
 						aria-label="caregory"
 						defaultValue="Ine"
+						value={problemCategory}
 						name="problem-category"
 						onChange={e => setProblemCategory(e.target.value as Category)}
 					>
@@ -96,6 +106,7 @@ const UploadNewProblem = () => {
 						placeholder=""
 						multiline
 						minRows={4}
+						value={problemDescription}
 						onChange={e => setProblemDescription(e.target.value)}
 					/>
 					<label htmlFor="contained-button-file">
@@ -145,6 +156,7 @@ const UploadNewProblem = () => {
 								}
 							}
 							setSaveLoading('alert');
+							resetFields();
 						}}
 					>
 						Add problem
