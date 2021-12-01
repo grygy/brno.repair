@@ -89,7 +89,7 @@ const Profile = () => {
 	}
 	return (
 		<Box mt={4}>
-			<Typography variant="h2" mb={4}>
+			<Typography variant="h2" mb={4} mx={1}>
 				Muj profil
 			</Typography>
 
@@ -122,7 +122,8 @@ const Profile = () => {
 				sx={{
 					'& .MuiTextField-root': { m: 1, width: '25ch' }
 				}}
-				m={2}
+				m={1}
+				mt={2}
 				display="flex"
 				justifyContent="left"
 			>
@@ -194,6 +195,7 @@ const Profile = () => {
 				<CircularProgress />
 			) : (
 				<Box
+					mx={1}
 					sx={{
 						bgcolor: 'background.paper',
 						pt: 6,
