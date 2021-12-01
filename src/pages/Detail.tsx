@@ -13,7 +13,7 @@ import DoneIcon from '@mui/icons-material/Done';
 
 import useDetail from '../hooks/useDetail';
 import useLoggedInUser from '../hooks/useLoggedInUser';
-import { resolveProblem, UserProfile } from '../utils/firebase';
+import { resolveProblem } from '../utils/firebase';
 
 const Detail: FC<RouteComponentProps<{ id: string }>> = ({ match }) => {
 	const id = match.params.id;
@@ -100,7 +100,7 @@ const Detail: FC<RouteComponentProps<{ id: string }>> = ({ match }) => {
 							Vytvořeno: {problem.created.toDate().toLocaleDateString()}
 						</Typography>
 						<Box mt={1}>
-							{problem.resolved !== null ? (
+							{problem.resolved !== 'null' ? (
 								<Typography
 									sx={{ color: 'success.main', fontWeight: '700' }}
 									variant="h4"
@@ -116,8 +116,8 @@ const Detail: FC<RouteComponentProps<{ id: string }>> = ({ match }) => {
 								</Typography>
 							)}
 						</Box>
-						{user?.uid === problem.author &&
-							problem.resolved === null &&
+						{user?.email === problem.author &&
+							problem.resolved === 'null' &&
 							!resolved && (
 								<Box mb={2}>
 									<LoadingButton
