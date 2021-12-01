@@ -7,8 +7,11 @@ import {
 	Button,
 	Box,
 	Menu,
-	MenuItem
+	MenuItem,
+	IconButton,
+	Typography
 } from '@mui/material';
+import MenuIcon from '@mui/icons-material/Menu';
 
 import useLoggedInUser from '../hooks/useLoggedInUser';
 import { signOut } from '../utils/firebase';
@@ -71,8 +74,11 @@ const Layout: FC = ({ children }) => {
 							</>
 						) : (
 							<>
+								<Button color="secondary" component={Link} to="/">
+									Brno.Repair
+								</Button>
 								<Box sx={{ flexGrow: 1 }} />
-								<Button
+								<IconButton
 									id="basic-button"
 									aria-controls="basic-menu"
 									aria-haspopup="true"
@@ -80,8 +86,8 @@ const Layout: FC = ({ children }) => {
 									onClick={handleClick}
 									sx={{ color: 'white' }}
 								>
-									Dashboard
-								</Button>
+									<MenuIcon />
+								</IconButton>
 								<Menu
 									id="basic-menu"
 									anchorEl={anchorEl}
@@ -91,9 +97,50 @@ const Layout: FC = ({ children }) => {
 										'aria-labelledby': 'basic-button'
 									}}
 								>
-									<MenuItem onClick={handleClose}>Profile</MenuItem>
-									<MenuItem onClick={handleClose}>My account</MenuItem>
-									<MenuItem onClick={handleClose}>Logout</MenuItem>
+									<MenuItem onClick={handleClose} component={Link} to="/">
+										Domů
+									</MenuItem>
+									<MenuItem
+										onClick={handleClose}
+										component={Link}
+										to="/problems"
+									>
+										Problémy
+									</MenuItem>
+									<MenuItem
+										onClick={handleClose}
+										component={Link}
+										to="/upload-new-problem"
+									>
+										Nahrát problém
+									</MenuItem>
+									{user && (
+										<MenuItem
+											onClick={handleClose}
+											component={Link}
+											to="/profile"
+										>
+											Profil
+										</MenuItem>
+									)}
+									{!user ? (
+										<MenuItem
+											onClick={handleClose}
+											component={Link}
+											to="/login"
+										>
+											Přihlásit se
+										</MenuItem>
+									) : (
+										<MenuItem
+											onClick={() => {
+												handleClose();
+												signOut();
+											}}
+										>
+											Odhlásit se
+										</MenuItem>
+									)}
 								</Menu>
 							</>
 						)}
