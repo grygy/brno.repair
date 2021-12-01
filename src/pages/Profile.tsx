@@ -76,8 +76,10 @@ const Profile = () => {
 		return <CircularProgress />;
 	}
 	return (
-		<>
-			<Typography variant="h1">Muj profil</Typography>
+		<Box mt={4}>
+			<Typography variant="h2" mb={4}>
+				Muj profil
+			</Typography>
 
 			<Box
 				component="form"
@@ -175,7 +177,7 @@ const Profile = () => {
 					</DialogActions>
 				</Dialog>
 			</div>
-		</>
+		</Box>
 	);
 };
 

@@ -13,7 +13,8 @@ import {
 	Input,
 	Radio,
 	RadioGroup,
-	TextField
+	TextField,
+	Typography
 } from '@mui/material';
 import { Timestamp } from '@firebase/firestore';
 import Compressor from 'compressorjs';
@@ -59,15 +60,10 @@ const UploadNewProblem = () => {
 	};
 	return (
 		<>
-			<Box
-				component="form"
-				mt={2}
-				sx={{
-					'& .MuiTextField-root': { m: 1, width: '25ch' }
-				}}
-				noValidate
-				autoComplete="off"
-			>
+			<Box component="form" mt={4} noValidate autoComplete="off">
+				<Typography variant="h2" mb={4}>
+					Novy problem
+				</Typography>
 				<FormControl>
 					<TextField
 						required
