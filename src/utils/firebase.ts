@@ -12,13 +12,23 @@ import {
 	collection,
 	CollectionReference,
 	doc,
+
+
+	DocumentData,
+	DocumentReference,
+
 	getDoc,
 	getDocs,
 	getFirestore,
 	limit,
 	orderBy,
 	query,
+
 	setDoc,
+
+	QueryDocumentSnapshot,
+	startAfter,
+
 	Timestamp,
 	updateDoc
 } from 'firebase/firestore';
@@ -130,6 +140,7 @@ export const resolveProblem = async (id: string) => {
 	await updateDoc(doc(db, PROBLEMS, id), { resolved: Timestamp.now() });
 };
 
+
 // -------------------- USER PROFILE ----------------------
 export type UserProfile = {
 	email: string;
@@ -171,3 +182,36 @@ export const addUserProfile = async (userProfile: UserProfile) =>
 		name: userProfile.name,
 		surname: userProfile.surname
 	});
+
+/**
+ * function gets next problems. With optional parameter lastVisible.
+ * @param lastVisible last visible document that returns this function
+ * @returns [ProblemsWithId[], lastVisible]
+ */
+export const getProblemsWithPagination = async (
+	lastVisible: QueryDocumentSnapshot<DocumentData> | undefined
+) => {
+	const LIMIT = 3;
+
+	let q = query(problemsCollection, orderBy('created', 'desc'), limit(LIMIT));
+	if (lastVisible) {
+		// fetching following data
+		q = query(
+			problemsCollection,
+			orderBy('created', 'desc'),
+			limit(LIMIT),
+			startAfter(lastVisible)
+		);
+	}
+
+	const documentSnapshots = await getDocs(q);
+	const last = documentSnapshots.docs[documentSnapshots.docs.length - 1];
+	const problems = documentSnapshots.docs.map(doc => {
+		const problem = doc.data() as Problem;
+		const id = doc.id;
+		const problemWithId = { id, ...problem };
+		return problemWithId as ProblemWithId;
+	});
+	return [problems, last] as const;
+};
+
