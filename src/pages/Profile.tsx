@@ -8,6 +8,7 @@ import {
 	DialogContent,
 	DialogContentText,
 	DialogTitle,
+	Grid,
 	TextField,
 	Typography
 } from '@mui/material';
@@ -16,11 +17,14 @@ import { LoadingButton } from '@mui/lab';
 
 import {
 	addUserProfile,
+	getUserProblems,
 	getUserProfile,
+	ProblemWithId,
 	updateUserProfile,
 	UserProfile
 } from '../utils/firebase';
 import useLoggedInUser from '../hooks/useLoggedInUser';
+import ProblemPreview from '../components/ProblemPreview';
 
 const Profile = () => {
 	const user = useLoggedInUser();
@@ -38,6 +42,16 @@ const Profile = () => {
 	const [userSurname, setUserSurname] = useState<string>('');
 
 	const auth = getAuth();
+
+	const [problems, setProblems] = useState<ProblemWithId[]>([]);
+	const [problemsLoading, setProblemsLoading] = useState(true);
+	useEffect(() => {
+		(async () => {
+			const res = await getUserProblems(user?.uid ?? '');
+			setProblems(res);
+			setProblemsLoading(false);
+		})();
+	}, []);
 
 	useEffect(() => {
 		(async () => {
@@ -114,7 +128,7 @@ const Profile = () => {
 			>
 				<LoadingButton
 					loading={resetLoading}
-					loadingPosition="end"
+					// loadingPosition="end"
 					sx={{ marginRight: '10px' }}
 					color="error"
 					variant="contained"
@@ -175,6 +189,33 @@ const Profile = () => {
 					</DialogActions>
 				</Dialog>
 			</div>
+
+			{problemsLoading ? (
+				<CircularProgress />
+			) : (
+				<Box
+					sx={{
+						bgcolor: 'background.paper',
+						pt: 8,
+						pb: 6
+					}}
+				>
+					<Grid container spacing={2}>
+						{problems.map(problem => (
+							<Grid
+								key={problem.created.toString()}
+								item
+								xs={12}
+								sm={6}
+								md={4}
+								lg={4}
+							>
+								<ProblemPreview problem={problem} />
+							</Grid>
+						))}
+					</Grid>
+				</Box>
+			)}
 		</>
 	);
 };

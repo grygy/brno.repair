@@ -165,6 +165,20 @@ export const getProblemsWithPagination = async (
 	});
 	return [problems, last] as const;
 };
+export const getUserProblems = async (id: string) => {
+	const q = query(
+		problemsCollection,
+		orderBy('created', 'desc'),
+		where('author', '==', id)
+	);
+	const querySnapshot = await getDocs(q);
+	return querySnapshot.docs.map(doc => {
+		const problem = doc.data() as Problem;
+		const id = doc.id;
+		const problemWithId = { id, ...problem };
+		return problemWithId as ProblemWithId;
+	});
+};
 
 // -------------------- USER PROFILE ----------------------
 export type UserProfile = {
