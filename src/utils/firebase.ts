@@ -23,7 +23,8 @@ import {
 	QueryDocumentSnapshot,
 	startAfter,
 	Timestamp,
-	updateDoc
+	updateDoc,
+	where
 } from 'firebase/firestore';
 import { getDownloadURL, getStorage, ref, uploadBytes } from 'firebase/storage';
 
@@ -172,12 +173,14 @@ export type UserProfile = {
 	surname: string;
 };
 
+/**
+ *
+ * @param email user email as primary key
+ * @returns UserProfile or undefined if user not exists
+ */
 export const getUserProfile = async (email: string) => {
 	try {
-		// todo tady je problem
-		console.log(email);
 		const res = await getDoc(doc(db, USER_PROFILES, email));
-		console.log(res);
 		if (res.exists()) {
 			return res.data() as UserProfile;
 		} else {
