@@ -52,7 +52,7 @@ const Problems = () => {
 
 	const filter = async () => {
 		const [newProblems, last] = await getProblemsWithPagination(
-			lastVisible,
+			undefined,
 			category,
 			resolved
 		);
@@ -84,68 +84,81 @@ const Problems = () => {
 				Seznam problémů
 			</Typography>
 
-			<FormControl>
-				<RadioGroup
-					aria-label="category"
-					defaultValue="All"
-					name="problem-category"
-					onChange={e => {
-						if (e.target.value === 'All') {
-							setCategory(undefined);
-						} else {
-							setCategory(e.target.value as Category);
-						}
-					}}
-				>
-					<FormControlLabel value="All" control={<Radio />} label="Vše" />
-					{categories.map(category => (
-						<FormControlLabel
-							key={category}
-							value={category}
-							control={<Radio />}
-							label={category}
-						/>
-					))}
-				</RadioGroup>
-				<RadioGroup
-					aria-label="resolved"
-					defaultValue="0"
-					name="problem-category"
-					onChange={e => {
-						const res = e.target.value;
-						switch (res) {
-							case '0':
-								setResolved(undefined);
-								break;
-							case '1':
-								setResolved(true);
-								break;
-							case '2':
-								setResolved(false);
-								break;
-							default:
-								setResolved(undefined);
-								break;
-						}
-					}}
-				>
-					<FormControlLabel
-						value="0"
-						control={<Radio />}
-						label="Všechny problémy"
-					/>
-					<FormControlLabel
-						value="1"
-						control={<Radio />}
-						label="Vyřešené problémy"
-					/>
-					<FormControlLabel
-						value="2"
-						control={<Radio />}
-						label="Nevyřešené problémy"
-					/>
-				</RadioGroup>
+			<FormControl sx={{ mb: 6, width: '100%', textAlign: 'left' }}>
+				<Typography mb={4} variant="h4" color="textSecondary">
+					Filtrování
+				</Typography>
+				<Grid container spacing={6}>
+					<Grid item lg={6} md={6} sm={6} xs={12}>
+						<Typography color="textSecondary">KATEGORIE:</Typography>
+						<RadioGroup
+							aria-label="category"
+							defaultValue="All"
+							name="problem-category"
+							onChange={e => {
+								if (e.target.value === 'All') {
+									setCategory(undefined);
+								} else {
+									setCategory(e.target.value as Category);
+								}
+							}}
+						>
+							<FormControlLabel value="All" control={<Radio />} label="Vše" />
+							{categories.map(category => (
+								<FormControlLabel
+									key={category}
+									value={category}
+									control={<Radio />}
+									label={category}
+								/>
+							))}
+						</RadioGroup>
+					</Grid>
+					<Grid item lg={6} md={6} sm={6} xs={12}>
+						<Typography color="textSecondary">VYŘEŠENO:</Typography>
+						<RadioGroup
+							aria-label="resolved"
+							defaultValue="0"
+							name="problem-category"
+							onChange={e => {
+								const res = e.target.value;
+								switch (res) {
+									case '0':
+										setResolved(undefined);
+										break;
+									case '1':
+										setResolved(true);
+										break;
+									case '2':
+										setResolved(false);
+										break;
+									default:
+										setResolved(undefined);
+										break;
+								}
+							}}
+						>
+							<FormControlLabel
+								value="0"
+								control={<Radio />}
+								label="Všechny problémy"
+							/>
+							<FormControlLabel
+								value="1"
+								control={<Radio />}
+								label="Vyřešené problémy"
+							/>
+							<FormControlLabel
+								value="2"
+								control={<Radio />}
+								label="Nevyřešené problémy"
+							/>
+						</RadioGroup>
+					</Grid>
+				</Grid>
 				<Button
+					variant="contained"
+					sx={{ width: '200px', mt: 2 }}
 					onClick={async () => {
 						setLoading(true);
 						setProblems([]);

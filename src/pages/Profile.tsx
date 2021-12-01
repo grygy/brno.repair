@@ -128,7 +128,7 @@ const Profile = () => {
 			>
 				<LoadingButton
 					loading={resetLoading}
-					loadingPosition="end"
+					// loadingPosition="end"
 					sx={{ marginRight: '10px' }}
 					color="error"
 					variant="contained"
@@ -149,7 +149,7 @@ const Profile = () => {
 
 				<LoadingButton
 					loading={saveLoading}
-					loadingPosition="end"
+					// loadingPosition="end"
 					variant="contained"
 					sx={{ marginLeft: '10px' }}
 					color="success"
