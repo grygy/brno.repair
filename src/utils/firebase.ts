@@ -84,7 +84,7 @@ export type Problem = {
 	author: string;
 	location: string;
 	created: Timestamp;
-	resolved: Timestamp | null;
+	resolved: Timestamp | 'null';
 	category: Category;
 };
 
@@ -137,23 +137,36 @@ export const resolveProblem = async (id: string) => {
 /**
  * function gets next problems. With optional parameter lastVisible.
  * @param lastVisible last visible document that returns this function
+ * @param category Category or undefined for filtering
+ * @param resolved booleand or undefined for filtering
  * @returns [ProblemsWithId[], lastVisible]
  */
 export const getProblemsWithPagination = async (
-	lastVisible: QueryDocumentSnapshot<DocumentData> | undefined
+	lastVisible: QueryDocumentSnapshot<DocumentData> | undefined,
+	category: Category | undefined,
+	resolved: boolean | undefined
 ) => {
 	const LIMIT = 3;
 
-	let q = query(problemsCollection, orderBy('created', 'desc'), limit(LIMIT));
-	if (lastVisible) {
-		// fetching following data
-		q = query(
-			problemsCollection,
-			orderBy('created', 'desc'),
-			limit(LIMIT),
-			startAfter(lastVisible)
-		);
+	const queries = [limit(LIMIT)];
+
+	if (category) {
+		queries.push(where('category', '==', category));
 	}
+	if (resolved !== undefined) {
+		queries.push(where('resolved', resolved ? '!=' : '==', 'null'));
+		if (resolved) {
+			queries.push(orderBy('resolved', 'desc'));
+		}
+		queries.push(orderBy('created', 'desc'));
+	} else {
+		queries.push(orderBy('created', 'desc'));
+	}
+	if (lastVisible) {
+		queries.push(startAfter(lastVisible));
+	}
+
+	const q = query(problemsCollection, ...queries);
 
 	const documentSnapshots = await getDocs(q);
 	const last = documentSnapshots.docs[documentSnapshots.docs.length - 1];

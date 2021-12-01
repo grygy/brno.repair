@@ -123,7 +123,7 @@ const UploadNewProblem = () => {
 										created: Timestamp.now(),
 										description: problemDescription,
 										location: problemLocation,
-										resolved: null,
+										resolved: 'null',
 										title: problemName
 									});
 									// compress image

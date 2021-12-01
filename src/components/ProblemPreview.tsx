@@ -24,7 +24,7 @@ const ProblemPreview: FC<Props> = ({ problem }) => {
 	const [savingResolved, setSavingResolved] = useState(false);
 	const [image, setImage] = useState('');
 	const [loading, setLoading] = useState(true);
-	const [resolved, setResolved] = useState(problem.resolved !== null);
+	const [resolved, setResolved] = useState(problem.resolved !== 'null');
 
 	useEffect(() => {
 		(async () => {
@@ -46,59 +46,59 @@ const ProblemPreview: FC<Props> = ({ problem }) => {
 	}
 
 	return (
-		<Link href={`/detail/${problem.id}`} sx={{ textDecoration: 'none' }}>
-			<Card
-				sx={{
-					justifyContent: 'start',
-					width: '100%',
-					textAlign: 'left',
-					borderColor: '#cb0e21'
-				}}
-			>
+		<Card
+			sx={{
+				justifyContent: 'start',
+				width: '100%',
+				textAlign: 'left',
+				borderColor: '#cb0e21'
+			}}
+		>
+			<Link href={`/detail/${problem.id}`} sx={{ textDecoration: 'none' }}>
 				<CardMedia
 					component="img"
 					height="auto"
 					image={image}
 					alt="Fotka problemu"
 				/>
-				<CardContent>
-					<Typography variant="h5" color="textSecondary">
-						{problem.title}
-					</Typography>
-					<Divider sx={{ my: 2 }} />
-					<Typography color="textSecondary">
-						<b>Kategorie: </b> {problem.category}
-					</Typography>
-					{resolved || problem.resolved !== null ? (
-						<Box mt={2} sx={{ color: 'success.main', textAlign: 'center' }}>
-							<Typography variant="h6">Vyřešen</Typography>
+			</Link>
+			<CardContent>
+				<Typography variant="h5" color="textSecondary">
+					{problem.title}
+				</Typography>
+				<Divider sx={{ my: 2 }} />
+				<Typography color="textSecondary">
+					<b>Kategorie: </b> {problem.category}
+				</Typography>
+				{resolved || problem.resolved !== 'null' ? (
+					<Box mt={2} sx={{ color: 'success.main', textAlign: 'center' }}>
+						<Typography variant="h6">Vyřešen</Typography>
+					</Box>
+				) : (
+					<Box mt={2} sx={{ color: 'primary.main', textAlign: 'center' }}>
+						<Typography variant="h6">Přetrvávající</Typography>
+					</Box>
+				)}
+			</CardContent>
+			{user?.email === problem.author &&
+				problem.resolved === 'null' &&
+				!resolved && (
+					<CardActions>
+						<Box mb={2} sx={{ width: '100%', textAlign: 'center' }}>
+							<LoadingButton
+								startIcon={<DoneIcon />}
+								color="success"
+								variant="outlined"
+								loading={savingResolved}
+								onClick={() => handleResolve(problem.id)}
+								loadingPosition="start"
+							>
+								Vyřešit
+							</LoadingButton>
 						</Box>
-					) : (
-						<Box mt={2} sx={{ color: 'primary.main', textAlign: 'center' }}>
-							<Typography variant="h6">Přetrvávající</Typography>
-						</Box>
-					)}
-				</CardContent>
-				{user?.uid === problem.author &&
-					problem.resolved === null &&
-					!resolved && (
-						<CardActions>
-							<Box mb={2} sx={{ width: '100%', textAlign: 'center' }}>
-								<LoadingButton
-									startIcon={<DoneIcon />}
-									color="success"
-									variant="outlined"
-									loading={savingResolved}
-									onClick={() => handleResolve(problem.id)}
-									loadingPosition="start"
-								>
-									Vyřešit
-								</LoadingButton>
-							</Box>
-						</CardActions>
-					)}
-			</Card>
-		</Link>
+					</CardActions>
+				)}
+		</Card>
 	);
 };
 
