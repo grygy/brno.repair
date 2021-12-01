@@ -178,6 +178,7 @@ export const getProblemsWithPagination = async (
 	});
 	return [problems, last] as const;
 };
+
 export const getUserProblems = async (id: string) => {
 	const q = query(
 		problemsCollection,
@@ -192,7 +193,6 @@ export const getUserProblems = async (id: string) => {
 		return problemWithId as ProblemWithId;
 	});
 };
-
 // -------------------- USER PROFILE ----------------------
 export type UserProfile = {
 	email: string;
