@@ -59,6 +59,7 @@ const Problems = () => {
 		setProblems(newProblems);
 		setLastVisible(last);
 		setFilterData([category, resolved]);
+		setIsThereNext(true);
 		if (newProblems.length === 0) {
 			setIsThereNext(false);
 		}
