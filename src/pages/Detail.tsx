@@ -7,18 +7,18 @@ import {
 	Stack,
 	Typography
 } from '@mui/material';
-import { match, RouteComponentProps, useHistory } from 'react-router-dom';
+import { RouteComponentProps, useHistory } from 'react-router-dom';
 import { LoadingButton } from '@mui/lab';
 import DoneIcon from '@mui/icons-material/Done';
 
 import useDetail from '../hooks/useDetail';
 import useLoggedInUser from '../hooks/useLoggedInUser';
-import { resolveProblem } from '../utils/firebase';
+import { resolveProblem, UserProfile } from '../utils/firebase';
 
 const Detail: FC<RouteComponentProps<{ id: string }>> = ({ match }) => {
 	const id = match.params.id;
 	const user = useLoggedInUser();
-	const [problem, loading, imageUrl, error, resolved, setResolved] =
+	const [problem, loading, imageUrl, error, resolved, userDetail, setResolved] =
 		useDetail(id);
 	const [savingResolved, setSavingResolved] = useState(false);
 	const history = useHistory();
@@ -84,9 +84,11 @@ const Detail: FC<RouteComponentProps<{ id: string }>> = ({ match }) => {
 						<Typography mb={2} variant="h3">
 							{problem.title}
 						</Typography>
-						{/* TODO get author name */}
 						<Typography sx={{ fontSize: '1.5rem' }}>
-							Autor: {problem.author}
+							Autor:{' '}
+							{userDetail
+								? `${userDetail.name} ${userDetail.surname}`
+								: 'Unknown user'}
 						</Typography>
 						<Typography sx={{ fontSize: '1.5rem' }}>
 							Category: {problem.category}

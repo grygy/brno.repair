@@ -12,25 +12,19 @@ import {
 	collection,
 	CollectionReference,
 	doc,
-
-
 	DocumentData,
-	DocumentReference,
-
 	getDoc,
 	getDocs,
 	getFirestore,
 	limit,
 	orderBy,
 	query,
-
 	setDoc,
-
 	QueryDocumentSnapshot,
 	startAfter,
-
 	Timestamp,
-	updateDoc
+	updateDoc,
+	where
 } from 'firebase/firestore';
 import { getDownloadURL, getStorage, ref, uploadBytes } from 'firebase/storage';
 
@@ -140,49 +134,6 @@ export const resolveProblem = async (id: string) => {
 	await updateDoc(doc(db, PROBLEMS, id), { resolved: Timestamp.now() });
 };
 
-
-// -------------------- USER PROFILE ----------------------
-export type UserProfile = {
-	email: string;
-	name: string;
-	surname: string;
-};
-
-export const getUserProfile = async (email: string) => {
-	try {
-		// todo tady je problem
-		console.log(email);
-		const res = await getDoc(doc(db, USER_PROFILES, email));
-		console.log(res);
-		if (res.exists()) {
-			return res.data() as UserProfile;
-		} else {
-			// todo tohle se provadi
-			console.error('Neexistuje doc');
-		}
-	} catch (err) {
-		console.error(err);
-		return undefined;
-	}
-};
-
-export const updateUserProfile = async (
-	email: string,
-	name: string,
-	surname: string
-) => {
-	await updateDoc(doc(db, USER_PROFILES, email), {
-		name,
-		surname
-	});
-};
-
-export const addUserProfile = async (userProfile: UserProfile) =>
-	await setDoc(doc(db, USER_PROFILES, userProfile.email), {
-		name: userProfile.name,
-		surname: userProfile.surname
-	});
-
 /**
  * function gets next problems. With optional parameter lastVisible.
  * @param lastVisible last visible document that returns this function
@@ -214,4 +165,61 @@ export const getProblemsWithPagination = async (
 	});
 	return [problems, last] as const;
 };
+export const getUserProblems = async (id: string) => {
+	const q = query(
+		problemsCollection,
+		orderBy('created', 'desc'),
+		where('author', '==', id)
+	);
+	const querySnapshot = await getDocs(q);
+	return querySnapshot.docs.map(doc => {
+		const problem = doc.data() as Problem;
+		const id = doc.id;
+		const problemWithId = { id, ...problem };
+		return problemWithId as ProblemWithId;
+	});
+};
 
+// -------------------- USER PROFILE ----------------------
+export type UserProfile = {
+	email: string;
+	name: string;
+	surname: string;
+};
+
+/**
+ *
+ * @param email user email as primary key
+ * @returns UserProfile or undefined if user not exists
+ */
+export const getUserProfile = async (email: string) => {
+	try {
+		const res = await getDoc(doc(db, USER_PROFILES, email));
+		if (res.exists()) {
+			return res.data() as UserProfile;
+		} else {
+			// todo tohle se provadi
+			console.error('Neexistuje doc');
+		}
+	} catch (err) {
+		console.error(err);
+		return undefined;
+	}
+};
+
+export const updateUserProfile = async (
+	email: string,
+	name: string,
+	surname: string
+) => {
+	await updateDoc(doc(db, USER_PROFILES, email), {
+		name,
+		surname
+	});
+};
+
+export const addUserProfile = async (userProfile: UserProfile) =>
+	await setDoc(doc(db, USER_PROFILES, userProfile.email), {
+		name: userProfile.name,
+		surname: userProfile.surname
+	});

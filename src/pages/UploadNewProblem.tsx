@@ -118,7 +118,7 @@ const UploadNewProblem = () => {
 								const supportedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
 								if (supportedTypes.includes(image.type)) {
 									const id = await addProblem({
-										author: user?.uid ?? '',
+										author: user?.email ?? '',
 										category: problemCategory,
 										created: Timestamp.now(),
 										description: problemDescription,
