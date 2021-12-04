@@ -20,8 +20,11 @@ import {
 	Category,
 	categories
 } from '../utils/firebase';
+import usePageTitle from '../hooks/usePageTitle';
 
 const Problems = () => {
+	usePageTitle('Problemy');
+
 	const [loading, setLoading] = useState(true);
 	const [problems, setProblems] = useState<ProblemWithId[]>([]);
 	const [lastVisible, setLastVisible] = useState<

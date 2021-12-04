@@ -12,8 +12,11 @@ import { useHistory } from 'react-router-dom';
 
 import { getLastProblems, ProblemWithId } from '../utils/firebase';
 import ProblemPreview from '../components/ProblemPreview';
+import usePageTitle from '../hooks/usePageTitle';
 
 const Home = () => {
+	usePageTitle('Domov');
+
 	const [problems, setProblems] = useState<ProblemWithId[]>([]);
 	const [loading, setLoading] = useState(true);
 	const history = useHistory();

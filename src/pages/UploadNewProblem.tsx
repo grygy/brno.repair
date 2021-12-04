@@ -30,8 +30,11 @@ import {
 	uploadImage
 } from '../utils/firebase';
 import useLoggedInUser from '../hooks/useLoggedInUser';
+import usePageTitle from '../hooks/usePageTitle';
 
 const UploadNewProblem = () => {
+	usePageTitle('Novy problem');
+
 	const user = useLoggedInUser();
 	const [image, setImage] = useState<File | null>(null);
 	const [problemName, setProblemName] = useState<string>('');
@@ -45,11 +48,9 @@ const UploadNewProblem = () => {
 	const handleFileChange = (
 		event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
 	) => {
-		console.log(event);
 		const files = (event.target as HTMLInputElement).files;
 		if (files) {
 			const file = files[0];
-			console.log(file);
 			setImage(file);
 		}
 	};
@@ -169,9 +170,7 @@ const UploadNewProblem = () => {
 											const file = new File([result], `${id}.jpg`, {
 												type: 'image/jpeg'
 											});
-											console.log('Uploading image');
 											await uploadImage(file);
-											console.log('Image uploaded');
 										}
 									});
 								}

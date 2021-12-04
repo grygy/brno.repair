@@ -14,6 +14,7 @@ import DoneIcon from '@mui/icons-material/Done';
 import useDetail from '../hooks/useDetail';
 import useLoggedInUser from '../hooks/useLoggedInUser';
 import { resolveProblem } from '../utils/firebase';
+import usePageTitle from '../hooks/usePageTitle';
 
 const Detail: FC<RouteComponentProps<{ id: string }>> = ({ match }) => {
 	const id = match.params.id;
@@ -22,6 +23,8 @@ const Detail: FC<RouteComponentProps<{ id: string }>> = ({ match }) => {
 		useDetail(id);
 	const [savingResolved, setSavingResolved] = useState(false);
 	const history = useHistory();
+
+	usePageTitle(`${problem?.title ?? ''}`);
 
 	// Submit handler
 	const handleResolve = async (id: string) => {

@@ -25,8 +25,11 @@ import {
 } from '../utils/firebase';
 import useLoggedInUser from '../hooks/useLoggedInUser';
 import ProblemPreview from '../components/ProblemPreview';
+import usePageTitle from '../hooks/usePageTitle';
 
 const Profile = () => {
+	usePageTitle('Profil');
+
 	const user = useLoggedInUser();
 	const [userProfile, setUserProfile] = useState<UserProfile | undefined>(
 		undefined
