@@ -22,6 +22,7 @@ import Compressor from 'compressorjs';
 import { LoadingButton } from '@mui/lab';
 import IconButton from '@mui/material/IconButton';
 import PhotoCamera from '@mui/icons-material/PhotoCamera';
+import { useHistory } from 'react-router-dom';
 
 import {
 	addProblem,
@@ -31,18 +32,24 @@ import {
 } from '../utils/firebase';
 import useLoggedInUser from '../hooks/useLoggedInUser';
 import usePageTitle from '../hooks/usePageTitle';
+import useField from '../hooks/useField';
 
 const UploadNewProblem = () => {
 	usePageTitle('Novy problem');
+	const history = useHistory();
 
 	const user = useLoggedInUser();
 	const [image, setImage] = useState<File | null>(null);
-	const [problemName, setProblemName] = useState<string>('');
-	const [problemLocation, setProblemLocation] = useState<string>('');
+	const [problemName, problemNameProps] = useField('name', true);
+	const [problemLocation, problemLocationProps] = useField('name', true);
 	const [problemCategory, setProblemCategory] = useState<Category>('Ine');
-	const [problemDescription, setProblemDescription] = useState<string>('');
-	const [saveLoading, setSaveLoading] = useState<'true' | 'false' | 'alert'>(
-		'false'
+	const [problemDescription, problemDescriptionProps] = useField(
+		'description',
+		false
+	);
+	const [saveLoading, setSaveLoading] = useState<boolean>(false);
+	const [dialogState, setDialogState] = useState<'none' | 'success' | 'error'>(
+		'none'
 	);
 
 	const handleFileChange = (
@@ -55,14 +62,6 @@ const UploadNewProblem = () => {
 		}
 	};
 
-	const resetFields = () => {
-		setImage(null);
-		setProblemName('');
-		setProblemLocation('');
-		setProblemCategory('Ine');
-		setProblemDescription('');
-	};
-
 	const Input = styled('input')({
 		display: 'none'
 	});
@@ -73,6 +72,13 @@ const UploadNewProblem = () => {
 				<Typography variant="h4">
 					Na pridanie problemu je potrebne sa prihlasit
 				</Typography>
+				<Button
+					sx={{ marginTop: 4 }}
+					variant="contained"
+					onClick={() => history.push('/login')}
+				>
+					Prihlasit sa
+				</Button>
 			</Box>
 		);
 	}
@@ -84,19 +90,13 @@ const UploadNewProblem = () => {
 				</Typography>
 				<FormControl>
 					<TextField
-						required
 						label="Nazev"
-						defaultValue=""
-						value={problemName}
-						onChange={e => setProblemName(e.target.value)}
+						{...problemNameProps}
 						sx={{ marginBottom: 1 }}
 					/>
 					<TextField
-						required
 						label="Lokace"
-						defaultValue=""
-						value={problemLocation}
-						onChange={e => setProblemLocation(e.target.value)}
+						{...problemLocationProps}
 						sx={{ marginBottom: 3 }}
 					/>
 					<FormLabel component="legend">Kategoria</FormLabel>
@@ -117,13 +117,10 @@ const UploadNewProblem = () => {
 						))}
 					</RadioGroup>
 					<TextField
-						id="problem-description"
 						label="Popis problemu"
-						placeholder=""
+						{...problemDescriptionProps}
 						multiline
 						minRows={4}
-						value={problemDescription}
-						onChange={e => setProblemDescription(e.target.value)}
 						sx={{ marginTop: 3, marginBottom: 3 }}
 					/>
 					<FormLabel component="legend">Obrazok problemu</FormLabel>
@@ -139,6 +136,7 @@ const UploadNewProblem = () => {
 								id="icon-button-file"
 								type="file"
 								onChange={handleFileChange}
+								required
 							/>
 							<IconButton
 								color="primary"
@@ -151,12 +149,12 @@ const UploadNewProblem = () => {
 					</Stack>
 					<LoadingButton
 						sx={{ marginTop: 1 }}
-						loading={saveLoading === 'true'}
+						loading={saveLoading === true}
 						loadingPosition="end"
 						variant="contained"
 						onClick={async () => {
-							setSaveLoading('true');
-							if (image) {
+							setSaveLoading(true);
+							if (image && problemName && problemLocation) {
 								const supportedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
 								if (supportedTypes.includes(image.type)) {
 									const id = await addProblem({
@@ -179,13 +177,20 @@ const UploadNewProblem = () => {
 											const file = new File([result], `${id}.jpg`, {
 												type: 'image/jpeg'
 											});
-											await uploadImage(file);
+											try {
+												await uploadImage(file);
+												setSaveLoading(false);
+												setDialogState('success');
+											} catch {
+												alert('Nahratie obrazku sa nepodarilo');
+											}
 										}
 									});
 								}
+							} else {
+								setSaveLoading(false);
+								setDialogState('error');
 							}
-							setSaveLoading('alert');
-							resetFields();
 						}}
 					>
 						Add problem
@@ -193,10 +198,8 @@ const UploadNewProblem = () => {
 				</FormControl>
 			</Box>
 			<Dialog
-				open={saveLoading === 'alert'}
-				onClose={() => setSaveLoading('false')}
-				aria-labelledby="alert-dialog-title"
-				aria-describedby="alert-dialog-description"
+				open={dialogState === 'success'}
+				onClose={() => setDialogState('none')}
 			>
 				<DialogTitle id="alert-dialog-title">
 					Problem uspesne nahrany
@@ -207,7 +210,24 @@ const UploadNewProblem = () => {
 					</DialogContentText>
 				</DialogContent>
 				<DialogActions>
-					<Button onClick={() => setSaveLoading('false')}>okay</Button>
+					<Button onClick={() => history.push('/problems')}>okay</Button>
+				</DialogActions>
+			</Dialog>
+			<Dialog
+				open={dialogState === 'error'}
+				onClose={() => setDialogState('none')}
+			>
+				<DialogTitle id="alert-dialog-title">
+					Nedostatok informacii na vytvorenie problemu
+				</DialogTitle>
+				<DialogContent>
+					<DialogContentText id="alert-dialog-description">
+						Nie vsetky povinne polozky (nazov, lokacia a obrazok) boli vyplnene.
+						Doplnte ich a skuste to znova.
+					</DialogContentText>
+				</DialogContent>
+				<DialogActions>
+					<Button onClick={() => setDialogState('none')}>okay</Button>
 				</DialogActions>
 			</Dialog>
 		</>
