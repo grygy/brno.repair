@@ -146,7 +146,7 @@ export const getProblemsWithPagination = async (
 	category: Category | undefined,
 	resolved: boolean | undefined
 ) => {
-	const LIMIT = 3;
+	const LIMIT = 12;
 
 	const queries = [limit(LIMIT)];
 
