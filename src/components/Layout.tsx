@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import {
 	AppBar,
 	Container,
@@ -8,8 +8,7 @@ import {
 	Box,
 	Menu,
 	MenuItem,
-	IconButton,
-	Typography
+	IconButton
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 
@@ -21,11 +20,17 @@ const Layout: FC = ({ children }) => {
 	const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 	const open = Boolean(anchorEl);
+	const history = useHistory();
 	const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
 		setAnchorEl(event.currentTarget);
 	};
 	const handleClose = () => {
 		setAnchorEl(null);
+	};
+
+	const handleSignOut = () => {
+		history.push('/');
+		signOut();
 	};
 
 	window.addEventListener('resize', () => {
@@ -67,7 +72,7 @@ const Layout: FC = ({ children }) => {
 										Přihlásit se
 									</Button>
 								) : (
-									<Button color="secondary" onClick={signOut}>
+									<Button color="secondary" onClick={handleSignOut}>
 										Odhlásit se
 									</Button>
 								)}
@@ -135,7 +140,7 @@ const Layout: FC = ({ children }) => {
 										<MenuItem
 											onClick={() => {
 												handleClose();
-												signOut();
+												handleSignOut();
 											}}
 										>
 											Odhlásit se
