@@ -8,8 +8,6 @@ import {
 	Grid,
 	Radio,
 	RadioGroup,
-	Stack,
-	Switch,
 	Typography
 } from '@mui/material';
 import { DocumentData, QueryDocumentSnapshot } from '@firebase/firestore';
