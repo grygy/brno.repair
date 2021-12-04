@@ -66,6 +66,16 @@ const UploadNewProblem = () => {
 	const Input = styled('input')({
 		display: 'none'
 	});
+
+	if (!user) {
+		return (
+			<Box my={4}>
+				<Typography variant="h4">
+					Na pridanie problemu je potrebne sa prihlasit
+				</Typography>
+			</Box>
+		);
+	}
 	return (
 		<>
 			<Box component="form" my={4} noValidate autoComplete="off">
@@ -146,7 +156,6 @@ const UploadNewProblem = () => {
 						variant="contained"
 						onClick={async () => {
 							setSaveLoading('true');
-							// TODO: pridat orezeany nahladovy obrazok
 							if (image) {
 								const supportedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
 								if (supportedTypes.includes(image.type)) {
