@@ -24,7 +24,7 @@ const useDetail = (id: string) => {
 			setProblem(results[0]);
 			setImageUrl(results[1]);
 			setUserDetail(await getUserProfile(results[0].author));
-			setResolved(results[0].resolved !== null);
+			setResolved(results[0].resolved !== 'null');
 			setLoading(false);
 		} catch (err) {
 			setLoading(false);

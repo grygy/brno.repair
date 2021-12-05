@@ -134,6 +134,7 @@ export const resolveProblem = async (id: string) => {
 	await updateDoc(doc(db, PROBLEMS, id), { resolved: Timestamp.now() });
 };
 
+export const LIMIT_PAGINATION = 9;
 /**
  * function gets next problems. With optional parameter lastVisible.
  * @param lastVisible last visible document that returns this function
@@ -146,9 +147,7 @@ export const getProblemsWithPagination = async (
 	category: Category | undefined,
 	resolved: boolean | undefined
 ) => {
-	const LIMIT = 12;
-
-	const queries = [limit(LIMIT)];
+	const queries = [limit(LIMIT_PAGINATION)];
 
 	if (category) {
 		queries.push(where('category', '==', category));

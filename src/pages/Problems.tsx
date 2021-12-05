@@ -18,7 +18,8 @@ import {
 	ProblemWithId,
 	getProblemsWithPagination,
 	Category,
-	categories
+	categories,
+	LIMIT_PAGINATION
 } from '../utils/firebase';
 import usePageTitle from '../hooks/usePageTitle';
 
@@ -46,7 +47,7 @@ const Problems = () => {
 		);
 		setProblems([...problems, ...newProblems]);
 		setLastVisible(last);
-		if (newProblems.length === 0) {
+		if (newProblems.length < LIMIT_PAGINATION || newProblems.length === 0) {
 			setIsThereNext(false);
 		}
 	};
@@ -80,7 +81,7 @@ const Problems = () => {
 	};
 
 	return (
-		<Box mt={4}>
+		<Box mt={4} mb={4}>
 			<Typography variant="h2" mb={4}>
 				Seznam problémů
 			</Typography>
